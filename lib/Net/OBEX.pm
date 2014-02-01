@@ -3,7 +3,7 @@ package Net::OBEX;
 use warnings;
 use strict;
 
-our $VERSION = '0.006';
+# VERSION
 
 use Carp;
 use Socket::Class;
@@ -83,7 +83,7 @@ sub connect {
     my $obj_response = $self->obj_res;
     my $response_ref = $obj_response->parse_sock( $sock, 'connect' )
         or return $self->_set_error( $obj_response->error );
-    
+
     # make and save connection ID header.. we will need it in every
     # packet
     if ( defined (my $id = $response_ref->{headers}{connection_id}) ) {
@@ -120,7 +120,7 @@ sub disconnect {
         packet  => 'disconnect',
         headers => $args{headers},
     );
-    
+
     my $sock = $self->sock;
     $sock->send( $disconnect_packet );
 
@@ -192,7 +192,7 @@ sub get {
 
     my $sock = $self->sock;
     $sock->send( $packet );
-    
+
     my @responses;
     my $obj_response = $self->obj_res;
     my $full_body = '';
@@ -277,7 +277,7 @@ sub put {
 
     # Connection ID must be the first header if it's present
     $self->_add_connection_id( $args{headers} );
-    
+
     my $head = $self->obj_head;
     for ( qw(length time name type) ) {
         exists $args{ $_ }
@@ -384,7 +384,7 @@ sub close {
                 : ()
             ],
         );
-        
+
         $sock->send( $disconnect_packet );
     };
     $sock->free();
@@ -409,6 +409,8 @@ sub _set_error {
 __END__
 
 =encoding utf8
+
+=for stopwords AnnoCPAN IrOBEX KRZR MTU Motorolla RT YYYYMMDDTHHMMSS YYYYMMDDTHHMMSSZ mtu proto
 
 =head1 NAME
 
@@ -477,7 +479,7 @@ use and abuse.
 Must be called after either C<connect()>, C<set_path()>, C<get()> or
 C<put()> method. Returns either true or false value indicating whether
 or not the call to last C<connect()>, C<set_path()>, C<get()> or
-C<put()> method ended with a successfull response from the server
+C<put()> method ended with a successful response from the server
 (code 200). B<Note:> the aforementioned methods returning a non-error
 (see descriptions below) does B<NOT> imply that C<success()> will return
 a true value.
@@ -529,7 +531,7 @@ which is described below after arguments. Possible arguments are as follows:
 
 =head3 address
 
-    ->connect( address => '00:17:E3:37:76:BB', ... 
+    ->connect( address => '00:17:E3:37:76:BB', ...
 
 B<Mandatory>. Specifies the MAC address of the device to connect to.
 
@@ -619,7 +621,7 @@ the UUID (without dashes). B<By default> no C<target> is specified.
         'raw_packet' => '�J��{ĕ<ҘNRTܞ   �'
     };
 
-If an error occured during the request, C<connect()> will return either
+If an error occurred during the request, C<connect()> will return either
 C<undef> or an empty list, depending on the context and the reason
 for the error will be available via C<error()> method. Otherwise it will
 return a hashref presented above. If the
@@ -683,7 +685,7 @@ B<Defaults to:> C<[]> (no headers)
         'raw_packet' => '�'
     };
 
-If an error occured during the request, C<disconnect()> will return either
+If an error occurred during the request, C<disconnect()> will return either
 C<undef> or an empty list, depending on the context and the reason
 for the error will be available via C<error()> method. Otherwise it will
 return a hashref presented above. If the
@@ -750,7 +752,7 @@ B<Defaults to:> C<[]> (no headers)
         'raw_packet' => '�'
     };
 
-If an error occured during the request, C<set_path()> will return either
+If an error occurred during the request, C<set_path()> will return either
 C<undef> or an empty list, depending on the context and the reason
 for the error will be available via C<error()> method. Otherwise it will
 return a hashref presented above. If the
@@ -772,7 +774,7 @@ C<parse_sock()> method description for the return value when
         file        => $fh,
     ) or die "Error: " . $obex->error;
 
-Instructs the obect to send an OBEX Get packet and any number of
+Instructs the object to send an OBEX Get packet and any number of
 Get (Continue) packets needed to finish the request (by default). Takes
 several arguments, all of which are optional. The possible arguments
 are as follows:
@@ -904,7 +906,7 @@ fetched data will be returned in the return hashref.
 
 The C<get()> method returns either C<undef> or an empty list (depending
 on the context) if an error
-occured and the explanation of the error will by available via C<error()>
+occurred and the explanation of the error will by available via C<error()>
 method. Otherwise it returns a big hashref. As opposed to C<connect()>,
 C<disconnect()> and C<set_path()> method
 the returned hashref from C<get()> method is a bit different because
@@ -1012,7 +1014,7 @@ sequence. B<By default> no C<Time> headers will be sent.
 B<Optional>. If specified will insert a C<Name> header into the C<PUT>
 packet with the value you specify. B<By default> the value of C<what>
 argument will be used B<unless> you set the C<no_name> argument (see
-below) to a true value. 
+below) to a true value.
 
 =head3 no_name
 
@@ -1048,7 +1050,7 @@ B<Defaults to:> C<[]> (no headers)
         'raw_packet' => '�'
     };
 
-If an error occured during the request, C<put()> will return either
+If an error occurred during the request, C<put()> will return either
 C<undef> or an empty list, depending on the context and the reason
 for the error will be available via C<error()> method. Otherwise it will
 return a hashref presented above. If the
@@ -1062,7 +1064,7 @@ C<parse_sock()> method description for the return value when
 
     $obex->close('No want you no moar');
 
-Similiar to C<disconnect()> method, except this one also closes the socket.
+Similar to C<disconnect()> method, except this one also closes the socket.
 Takes one optional argument which is the text to send out in the
 C<Description> header of the C<Disconnect> packet. Always returns C<1>.
 
@@ -1131,7 +1133,7 @@ want to include in C<headers> arguments (where applicable).
     my $net_obex_packet_request = $obex->obj_req;
 
 Takes no arguments, returns a L<Net::OBEX::Packet::Request> object used
-internally. 
+internally.
 
 =head1 EXAMPLES
 
@@ -1139,51 +1141,28 @@ The C<examples> directory of this distribution contains C<get.pl> and
 C<put.pl> scripts which work fine for me, note that you'll need to change
 address/port as well as filenames for your device.
 
-=head1 AUTHOR
+=head1 REPOSITORY
 
-Zoffix Znet, C<< <zoffix at cpan.org> >>
-(L<http://zoffix.com>, L<http://haslayout.net>, L<http://zofdesign.com/>)
+Fork this module on GitHub:
+L<https://github.com/zoffixznet/Net-OBEX>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-net-obex at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Net-OBEX>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
+To report bugs or request features, please use
+L<https://github.com/zoffixznet/Net-OBEX/issues>
 
-=head1 SUPPORT
+If you can't access GitHub, you can email your request
+to C<bug-Net-OBEX at rt.cpan.org>
 
-You can find documentation for this module with the perldoc command.
+=head1 AUTHOR
 
-    perldoc Net::OBEX
+Zoffix Znet <zoffix at cpan.org>
+(L<http://zoffix.com/>, L<http://haslayout.net/>)
 
-You can also look for information at:
+=head1 LICENSE
 
-=over 4
-
-=item * RT: CPAN's request tracker
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Net-OBEX>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/Net-OBEX>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/Net-OBEX>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/Net-OBEX>
-
-=back
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright 2008 Zoffix Znet, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
-
+You can use and distribute this module under the same terms as Perl itself.
+See the C<LICENSE> file included in this distribution for complete
+details.
 
 =cut
